@@ -16,26 +16,22 @@ export type Payment = {
 
 export function charge(invoice: Invoice, payments: Payment[]): Receipt {
   const total = invoice.total;
-  let deposit = 0;
   //商品券から先に処理するために並び替え
   const sortedPayments = [...payments].sort((payment) => (payment.type === 'COUPON' ? -1 : 1));
 
-  payments
-    .sort((payment) => (payment.type !== 'CASH' ? -1 : 1))
-    .map((payment) => {
-      if (payment.type === 'COUPON') {
-        if (payment.percentage != null) {
-          deposit += Math.floor(total * (payment.percentage / 100));
-        } else {
-          deposit += payment.amount || 0;
-        }
-      } else {
-        if (deposit >= total) {
-          throw new Error('OverCharge');
-        }
-        deposit += payment.amount || 0;
-      }
-    });
+  // お会計処理
+  const deposit = sortedPayments.reduce((acc, payment) => {
+    if (payment.type === 'COUPON') {
+      const couponValue = payment.percentage
+        ? Math.floor(total * (payment.percentage / 100))
+        : payment.amount || 0;
+      return acc + couponValue;
+    }
+    if (acc >= total) {
+      throw new Error('OverCharge');
+    }
+    return acc + (payment.amount || 0);
+  }, 0);
   if (total > deposit) {
     throw new Error('Shortage');
   }
