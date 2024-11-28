@@ -17,6 +17,8 @@ export type Payment = {
 export function charge(invoice: Invoice, payments: Payment[]): Receipt {
   const total = invoice.total;
   let deposit = 0;
+  //商品券から先に処理するために並び替え
+  const sortedPayments = [...payments].sort((payment) => (payment.type === 'COUPON' ? -1 : 1));
 
   payments
     .sort((payment) => (payment.type !== 'CASH' ? -1 : 1))
