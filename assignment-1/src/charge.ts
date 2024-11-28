@@ -44,3 +44,12 @@ export function charge(invoice: Invoice, payments: Payment[]): Receipt {
       throw new Error('OverCharge');
     }
   }
+
+  // レシートの生成
+  const isOnlyCoupon = sortedPayments.every((payment) => payment.type === 'COUPON');
+  const change = isOnlyCoupon ? 0 : deposit - total;
+
+  return { total, deposit, change };
+}
+
+
