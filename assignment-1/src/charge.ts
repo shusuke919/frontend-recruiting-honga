@@ -14,7 +14,7 @@ export type Payment = {
   amount?: number;
 };
 
-export function charge(invoice: Invoice, payments: Payment[]) {
+export function charge(invoice: Invoice, payments: Payment[]): Receipt {
   const total = invoice.total;
   let deposit = 0;
 
