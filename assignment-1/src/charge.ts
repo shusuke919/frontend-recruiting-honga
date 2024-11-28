@@ -9,7 +9,7 @@ export type Receipt = {
 };
 
 export type Payment = {
-  type: string;
+  type: 'CASH' | 'COUPON';
   percentage?: number;
   amount?: number;
 };
