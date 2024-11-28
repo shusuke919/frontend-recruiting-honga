@@ -52,4 +52,16 @@ export function charge(invoice: Invoice, payments: Payment[]): Receipt {
   return { total, deposit, change };
 }
 
+// テスト用データを作成
+const invoice: Invoice = { total: 1000 };
+const payments: Payment[] = [
+  { type: 'COUPON', percentage: 10 },
+  { type: 'CASH', amount: 1800 },
+];
 
+try {
+  const receipt = charge(invoice, payments);
+  console.log('レシート:', receipt);
+} catch (error) {
+  console.error('エラーです！', (error as Error).message);
+}
